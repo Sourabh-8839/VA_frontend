@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
 import { Link } from "react-router-dom";
+import { fetchPostFromReddit } from "../services/api";
 
 // Simulated Twitter Data (you would normally fetch this from Twitter's API)
-const twitterData = [
-  { id: 1, content: "Just finished a great book on React!", author: "TwitterUser1", url: "https://twitter.com/TwitterUser1/status/123" },
-  { id: 2, content: "The new React version is amazing!", author: "TwitterUser2", url: "https://twitter.com/TwitterUser2/status/124" },
-];
+
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
@@ -17,23 +15,20 @@ const Feed = () => {
   const fetchPosts = async () => {
     try {
       // Fetch Reddit posts
-      const redditResponse = await axios.get("https://www.reddit.com/r/reactjs/new.json?limit=5");
+      const redditResponse = await fetchPostFromReddit();
       const redditPosts = redditResponse.data.data.children.map(post => ({
         id: post.data.id,
         content: post.data.title,
         author: post.data.author,
         url: `https://www.reddit.com${post.data.permalink}`,
+        thumbnail: post.data.thumbnail,
+        // selftext_html: post.data.selftext_html || "", // Fallback to empty string if selftext_html is not available
       }));
 
-      // Simulate LinkedIn data (You would use LinkedIn's API with OAuth for actual data)
-      const linkedinData = [
-        { id: 1, content: "Excited to share my latest article on React!", author: "LinkedInUser1", url: "https://linkedin.com/in/LinkedInUser1" },
-        { id: 2, content: "Check out my recent post on JavaScript advancements.", author: "LinkedInUser2", url: "https://linkedin.com/in/LinkedInUser2" },
-      ];
+      console.log(redditPosts, "reddit posts");
+      
 
-      // Combine data from Reddit, Twitter, and LinkedIn
-      const allPosts = [...redditPosts, ...twitterData, ...linkedinData];
-      setPosts(allPosts);
+      setPosts(redditPosts);
       setLoading(false);
     } catch (err) {
       setError("Error fetching posts");
@@ -47,7 +42,16 @@ const Feed = () => {
 
   const handleSavePost = (postId) => {
     const postToSave = posts.find(post => post.id === postId);
-    setSavedPosts(prevSaved => [...prevSaved, postToSave]);
+    
+    // Check if the post is already in the savedPosts list
+    const isPostAlreadySaved = savedPosts.some(savedPost => savedPost.id === postId);
+
+    if (!isPostAlreadySaved && postToSave) {
+      
+      setSavedPosts(prevSaved => [...prevSaved, postToSave]);
+    } else {
+      console.log("Post is already saved or doesn't exist.");
+    }
   };
 
   const handleSharePost = (url) => {
@@ -170,6 +174,8 @@ const Feed = () => {
                   d="M19 9l-7 7-7-7"
                 />
               </svg>
+
+              
             </div>
           </nav>
         </div>
@@ -178,11 +184,14 @@ const Feed = () => {
 
     <div className="p-4 space-y-4">
       {/* <h1 className="text-2xl font-semibold mb-4">Feed</h1> */}
-      <div className="overflow-auto h-96 space-y-4">
+      <div className="overflow-auto h-200 space-y-4">
         {posts.map(post => (
           <div key={post.id} className="bg-white p-4 rounded-lg shadow-md">
-            <h2 className="text-lg font-semibold">{post.author}</h2>
             <p className="text-sm text-gray-600">{post.content}</p>
+            
+            
+            <img src={post.thumbnail} alt="" />
+            <h2 className="text-lg font-semibold">{post.author}</h2>
             <div className="mt-2 flex space-x-4">
               <button
                 onClick={() => handleSavePost(post.id)}

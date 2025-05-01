@@ -27,10 +27,10 @@ export const LoginUser = async (form, config) => {
 };
 
 
-export const fetchPostFromReddit = async(subreddit)=>{
+export const fetchPostFromReddit = async()=>{
 
   try {
-    const redditResponse = await axios.get(`https://www.reddit.com/r/${subreddit}/new.json?limit=5`);
+    const redditResponse = await axios.get(`https://www.reddit.com/r/reactjs/new.json?limit=10`);
 
     return redditResponse
   } catch (error) {

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import { useData } from "../context/UserContext";
 
 const DashboardPage = () => {
   const recentActivityData = [
@@ -11,6 +12,9 @@ const DashboardPage = () => {
     { activity: "Commented on a feed", time: "3:30 PM" },
     { activity: "MAke", time: "4:55 PM" },
   ];
+
+  const {account} = useData();
+  
 
   return (
     <div class="w-screen h-screen flex  bg-[#F8F9FF]">
@@ -128,10 +132,8 @@ const DashboardPage = () => {
             {/* Credit Stats */}
             <div className="bg-white p-6 rounded-lg shadow-lg">
               <h2 className="text-xl font-semibold mb-4">Credit Stats</h2>
-              <p className="text-lg">Your total credits: 1200</p>
-              <p className="text-sm text-gray-500">
-                Credits earned this month: 200
-              </p>
+              <p className="text-lg">Your total credits: {account.user.credits}</p>
+
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-lg">
