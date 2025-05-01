@@ -74,6 +74,7 @@ const RegisterPage = () => {
   };
 
   return (
+    <div className='p-4 h-screen flex items-center justify-center'>
     <div className="flex flex-col items-center justify-center min-w-[24rem] mx-auto px-4 py-10">
       <div className="w-full p-6 rounded-2xl shadow-lg bg-white/5 backdrop-blur border border-zinc-600">
         <h1 className="text-3xl font-semibold text-center text-zinc-400">
@@ -149,6 +150,8 @@ const RegisterPage = () => {
         </form>
       </div>
     </div>
+    </div>
+
   );
 };
 

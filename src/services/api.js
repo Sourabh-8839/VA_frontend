@@ -19,9 +19,23 @@ export const registerUser = async (data,config) => {
 export const LoginUser = async (form, config) => {
   try {
     let user = await axiosInstance.post('/user/login', form, config);
-    return user.data;
+    return user;
   } catch (error) {
     console.log(error);
     return error.response.data;
   }
 };
+
+
+export const fetchPostFromReddit = async(subreddit)=>{
+
+  try {
+    const redditResponse = await axios.get(`https://www.reddit.com/r/${subreddit}/new.json?limit=5`);
+
+    return redditResponse
+  } catch (error) {
+    
+    console.log(error);
+    
+  }
+}
